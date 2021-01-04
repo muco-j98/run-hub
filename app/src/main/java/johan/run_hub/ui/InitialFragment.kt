@@ -14,4 +14,6 @@ class InitialFragment : Fragment(R.layout.fragment_initial) {
         super.onViewCreated(view, savedInstanceState)
         //beje ktu check per first time
     }
+
+
 }

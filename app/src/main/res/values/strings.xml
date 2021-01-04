@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Run_Hub</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="category_options">
+        <item>All</item>
+        <item>Biking</item>
+        <item>Runs</item>
+    </string-array>
+    <string-array name="sorting_options">
+        <item>Date</item>
+        <item>Duration</item>
+        <item>Avg. Speed</item>
+        <item>Calories Burned</item>
+    </string-array>
 </resources>
