@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Run_Hub</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="locations_rationale">Please accept the location permissions</string>
     <string-array name="category_options">
         <item>All</item>
         <item>Biking</item>

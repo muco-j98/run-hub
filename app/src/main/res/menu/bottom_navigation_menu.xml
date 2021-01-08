@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/page_1"
+        android:id="@+id/exercisesFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_bicycle"
-        android:title="label1"/>
+        android:icon="@drawable/ic_run"
+        android:title="Exercises"/>
     <item
-        android:id="@+id/page_2"
+        android:id="@+id/statsFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_bicycle"
-        android:title="label2"/>
+        android:icon="@drawable/ic_statistics"
+        android:title="Stats"/>
+    <item
+        android:id="@+id/regressionAlgorithmFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_linear_regression"
+        android:title="Regression"/>
 </menu>

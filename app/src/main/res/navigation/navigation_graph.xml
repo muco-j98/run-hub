@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/exercisesFragment">
+    app:startDestination="@id/initialFragment">
     <fragment
         android:id="@+id/initialFragment"
         android:name="johan.run_hub.ui.InitialFragment"
@@ -31,4 +31,14 @@
             android:id="@+id/action_exercisesFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/regressionAlgorithmFragment"
+        android:name="johan.run_hub.ui.RegressionAlgorithmFragment"
+        android:label="fragment_regression_algorithm"
+        tools:layout="@layout/fragment_regression_algorithm" />
+    <fragment
+        android:id="@+id/statsFragment"
+        android:name="johan.run_hub.ui.StatsFragment"
+        android:label="fragment_stats"
+        tools:layout="@layout/fragment_stats" />
 </navigation>
