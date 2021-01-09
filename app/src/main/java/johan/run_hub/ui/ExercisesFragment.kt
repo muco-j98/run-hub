@@ -6,17 +6,14 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import johan.run_hub.R
-import johan.run_hub.db.constantValues.constantValues.LOCATION_PERMISSIONS_CODE
+import johan.run_hub.db.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
 import johan.run_hub.utils.TrackUtil
 import kotlinx.android.synthetic.main.fragment_exercises.*
-import kotlinx.android.synthetic.main.fragment_initial.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import pub.devrel.easypermissions.PermissionRequest
 
 class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions.PermissionCallbacks  {
 
