@@ -1,14 +1,19 @@
 package johan.run_hub.ui
 
+import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
+import johan.run_hub.db.constantValues.ConstantValues.START_OR_RESUME_TRACKING
 import johan.run_hub.service.LocationTrackingService
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_maps.*
@@ -20,12 +25,20 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     private var googleMap: GoogleMap? = null
 
+    private lateinit var exerciseType: String
+
+    private val args: MapsFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mapView.onCreate(savedInstanceState)
 
+        exerciseType = args.exerciseType
+
+        Toast.makeText(requireContext(), exerciseType, Toast.LENGTH_SHORT).show()
+
         startExercise_btn.setOnClickListener {
-            sendIntentToService("test")
+            sendIntentToService(START_OR_RESUME_TRACKING)
         }
 
         mapView.getMapAsync{

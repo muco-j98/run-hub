@@ -7,21 +7,30 @@ import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.LifecycleService
 import johan.run_hub.MainActivity
 import johan.run_hub.R
-import johan.run_hub.db.constantValues.ConstantValues
 import johan.run_hub.db.constantValues.ConstantValues.CHANNEL_ID
+import johan.run_hub.db.constantValues.ConstantValues.PAUSE_TRACKING
+import johan.run_hub.db.constantValues.ConstantValues.START_OR_RESUME_TRACKING
+import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
 
 class LocationTrackingService: LifecycleService() {
 
+    var isFirstTime = true
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        if (intent?.action == "test") {
-            startForegroundService()
+        if (intent?.action == START_OR_RESUME_TRACKING) {
+            if (isFirstTime) {
+                startForegroundService()
+                isFirstTime = false
+            }
+        } else if (intent?.action == STOP_TRACKING) {
+            Log.DEBUG
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -42,8 +51,8 @@ class LocationTrackingService: LifecycleService() {
             FLAG_UPDATE_CURRENT)
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("test title")
-            .setContentText("test input")
+            .setContentTitle("RunHub")
+            .setContentText("An exercise is currently in process")
             .setSmallIcon(R.drawable.ic_bicycle)
             .setContentIntent(pendingIntent)
 

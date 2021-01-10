@@ -9,7 +9,9 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import johan.run_hub.R
+import johan.run_hub.db.constantValues.ConstantValues.BIKE_EXERCISE
 import johan.run_hub.db.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
+import johan.run_hub.db.constantValues.ConstantValues.RUN_EXERCISE
 import johan.run_hub.utils.TrackUtil
 import kotlinx.android.synthetic.main.fragment_exercises.*
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -34,15 +36,20 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
         }
 
         bike_btn.setOnClickListener {
-            findNavController().navigate(R.id.action_exercisesFragment_to_mapsFragment)
+            val action = ExercisesFragmentDirections.actionExercisesFragmentToMapsFragment(
+                BIKE_EXERCISE)
+            findNavController().navigate(action)
+
         }
 
         run_btn.setOnClickListener {
-            findNavController().navigate(R.id.action_exercisesFragment_to_mapsFragment)
+            val action = ExercisesFragmentDirections.actionExercisesFragmentToMapsFragment(
+                RUN_EXERCISE)
+            findNavController().navigate(action)
         }
     }
 
-    private fun getSubPermission() {
+    private fun getSubQPermission() {
         EasyPermissions.requestPermissions(
             this,
             getString(R.string.locations_rationale),
@@ -64,7 +71,7 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
             return
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            getSubPermission()
+            getSubQPermission()
         } else {
             getQPermission()
         }
