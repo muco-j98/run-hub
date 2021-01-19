@@ -1,34 +1,68 @@
 package johan.run_hub.service
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Build
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.LatLng
 import johan.run_hub.MainActivity
 import johan.run_hub.R
 import johan.run_hub.db.constantValues.ConstantValues.CHANNEL_ID
-import johan.run_hub.db.constantValues.ConstantValues.PAUSE_TRACKING
-import johan.run_hub.db.constantValues.ConstantValues.START_OR_RESUME_TRACKING
+import johan.run_hub.db.constantValues.ConstantValues.START_TRACKING
 import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
+import johan.run_hub.utils.TrackUtil
+import timber.log.Timber
+
+typealias Polyline = MutableList<LatLng>
 
 class LocationTrackingService: LifecycleService() {
 
-    var isFirstTime = true
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    lateinit var exerciseType: String
+
+    companion object {
+        val currentlyRunning = MutableLiveData<Boolean>()
+        val pathTrack = MutableLiveData<Polyline>()
+    }
+
+    private fun setupFirstValues() {
+        currentlyRunning.postValue(false)
+        pathTrack.postValue(mutableListOf())
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        setupFirstValues()
+        fusedLocationProviderClient = FusedLocationProviderClient(this)
+
+        currentlyRunning.observe(this, Observer {
+            updateLocationTracking(it)
+        })
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        if (intent?.action == START_OR_RESUME_TRACKING) {
-            if (isFirstTime) {
-                startForegroundService()
-                isFirstTime = false
-            }
+        if (intent?.action == START_TRACKING) {
+            exerciseType = intent.getStringExtra("EXERCISE_TYPE")!!
+            startForegroundService()
+            Timber.d("service started...")
         } else if (intent?.action == STOP_TRACKING) {
             Log.DEBUG
         }
@@ -36,10 +70,72 @@ class LocationTrackingService: LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    private fun getFormattedExerciseString(exerciseType: String): String {
+        return when (exerciseType) {
+            "RUN_EXERCISE" -> "running"
+            "BIKE_EXERCISE" -> "biking"
+            else -> ""
+        }
+    }
+
+    private fun getExerciseIcon(exerciseType: String): Int {
+        return when (exerciseType) {
+            "RUN_EXERCISE" -> R.drawable.ic_run
+            "BIKE_EXERCISE" -> R.drawable.ic_bicycle
+            else -> 0
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateLocationTracking(currentlyRunning: Boolean) {
+        if(currentlyRunning && TrackUtil.hasLocationPermissions(this)) {
+            Timber.d("went into update location tracking")
+            fusedLocationProviderClient.requestLocationUpdates(
+                setupLocationRequest(),
+                locationCallback,
+                Looper.getMainLooper()
+            )
+            }
+            else {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        }
+    }
+
+    private fun setupLocationRequest(): LocationRequest {
+        var locationRequest = LocationRequest()
+        locationRequest.interval = 5000L
+        locationRequest.fastestInterval = 2000L
+        locationRequest.priority = PRIORITY_HIGH_ACCURACY
+        return locationRequest
+    }
+
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult?) {
+            super.onLocationResult(result)
+            if(currentlyRunning.value!!) {
+                result?.locations?.let { locations ->
+                    for(location in locations) {
+                        addRoutePositions(location)
+                        Timber.d("NEW LOCATION: ${location.latitude}, ${location.longitude}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun addRoutePositions(location: Location?) {
+        if (location != null) {
+            val geoPoint = LatLng(location.latitude, location.longitude)
+            pathTrack.value?.add(geoPoint)
+            pathTrack.postValue(pathTrack.value)
+        }
+    }
+
     private fun startForegroundService() {
+        currentlyRunning.postValue(true)
 
         val channelId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel("my_service", "My Background Service")
+            createChannel("my_service_id", "channel_name")
         } else {
             CHANNEL_ID
         }
@@ -52,8 +148,8 @@ class LocationTrackingService: LifecycleService() {
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle("RunHub")
-            .setContentText("An exercise is currently in process")
-            .setSmallIcon(R.drawable.ic_bicycle)
+            .setContentText("A ${getFormattedExerciseString(exerciseType)} exercise is currently in process")
+            .setSmallIcon(getExerciseIcon(exerciseType))
             .setContentIntent(pendingIntent)
 
         startForeground(1, notificationBuilder.build())
@@ -63,13 +159,11 @@ class LocationTrackingService: LifecycleService() {
     private fun createChannel(channelId: String, channelName: String): String {
 
         val channel = NotificationChannel(channelId,
-                                       channelName,
-                                        NotificationManager.IMPORTANCE_LOW)
+            channelName,
+            NotificationManager.IMPORTANCE_LOW)
 
         val service = getSystemService(Context  .NOTIFICATION_SERVICE) as NotificationManager
         service.createNotificationChannel(channel)
         return channelId
     }
-
-
 }

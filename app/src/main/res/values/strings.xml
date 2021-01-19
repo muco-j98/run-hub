@@ -2,6 +2,7 @@
     <string name="app_name">Run_Hub</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="locations_rationale">Please accept the location permissions</string>
+    <string name="preference_file_key">johan.run_hub.PREFERENCE_FILE_KEY</string>
     <string-array name="category_options">
         <item>All</item>
         <item>Biking</item>

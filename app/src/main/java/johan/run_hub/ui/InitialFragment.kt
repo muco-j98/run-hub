@@ -1,18 +1,35 @@
 package johan.run_hub.ui
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
+import johan.run_hub.dependency.AppModule
 import kotlinx.android.synthetic.main.fragment_initial.*
 import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class InitialFragment : Fragment(R.layout.fragment_initial) {
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
+
+    @set:Inject
+    var isFirstTime = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (!isFirstTime) {
+            findNavController().navigate(R.id.action_initialFragment_to_exercisesFragment)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -22,6 +39,8 @@ class InitialFragment : Fragment(R.layout.fragment_initial) {
             val weight = editWeight.text.toString()
 
             if (validateEntries(name, weight)) {
+                sharedPref.edit().putFloat("WEIGHT", weight.toFloat()).apply()
+                sharedPref.edit().putBoolean("FIRST_TIME", false).apply()
                 findNavController().navigate(R.id.action_initialFragment_to_exercisesFragment)
             } else {
                 Toast.makeText(activity, "Please enter valid values", Toast.LENGTH_SHORT).show()

@@ -10,6 +10,6 @@ object ConstantValues {
     const val RUN_EXERCISE = "RUN_EXERCISE"
     const val BIKE_EXERCISE = "BIKE_EXERCISE"
 
-    const val START_OR_RESUME_TRACKING = "START_OR_RESUME_TRACKING"
+    const val START_TRACKING = "START_OR_RESUME_TRACKING"
     const val STOP_TRACKING = "STOP_TRACKING"
 }

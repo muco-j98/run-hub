@@ -19,14 +19,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        def secretsProperties = new Properties()
-        if (rootProject.file("secrets.properties").exists()) {
-            rootProject.file("secrets.properties")?.withInputStream {
-                secretsProperties.load(it)
-            }
-        }
-        resValue "string", "google_maps_key", (secretsProperties["GOOGLE_MAPS_API_KEY"] ?: "")
     }
 
     buildTypes {
@@ -43,9 +35,6 @@ android {
         jvmTarget = '1.8'
     }
 
-    viewBinding {
-        enabled = true
-    }
 }
 
 dependencies {
@@ -107,4 +96,6 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
     implementation 'pub.devrel:easypermissions:3.0.0'
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

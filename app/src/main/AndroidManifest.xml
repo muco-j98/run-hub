@@ -23,15 +23,15 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".service.LocationTrackingService"
+            android:foregroundServiceType="location"/>
+
         <meta-data
             android:name="com.google.android.geo.version"
-            android:value="" />
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_key" />
-
-        <service android:name=".service.LocationTrackingService"
-            android:foregroundServiceType="location"/>
     </application>
 
 </manifest>

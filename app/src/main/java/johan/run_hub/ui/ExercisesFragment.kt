@@ -49,22 +49,22 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
         }
     }
 
-    private fun getSubQPermission() {
-        EasyPermissions.requestPermissions(
-            this,
-            getString(R.string.locations_rationale),
-            LOCATION_PERMISSIONS_CODE,
-            Manifest.permission.ACCESS_COARSE_LOCATION)
-    }
-
-    private fun getQPermission() {
-        EasyPermissions.requestPermissions(
+    private fun getSubQPermission() = EasyPermissions.requestPermissions(
             this,
             getString(R.string.locations_rationale),
             LOCATION_PERMISSIONS_CODE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+
+
+    private fun getQPermission() = EasyPermissions.requestPermissions(
+            this,
+            getString(R.string.locations_rationale),
+            LOCATION_PERMISSIONS_CODE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-    }
+
 
     private fun requestLocationPermission() {
         if (TrackUtil.hasLocationPermissions(requireContext())) {
