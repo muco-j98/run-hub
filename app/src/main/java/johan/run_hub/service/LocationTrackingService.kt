@@ -64,7 +64,7 @@ class LocationTrackingService: LifecycleService() {
             startForegroundService()
             Timber.d("service started...")
         } else if (intent?.action == STOP_TRACKING) {
-            Log.DEBUG
+            stopTracking()
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -84,6 +84,10 @@ class LocationTrackingService: LifecycleService() {
             "BIKE_EXERCISE" -> R.drawable.ic_bicycle
             else -> 0
         }
+    }
+
+    private fun stopTracking() {
+        currentlyRunning.postValue(false)
     }
 
     @SuppressLint("MissingPermission")

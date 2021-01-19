@@ -1,15 +1,22 @@
 package johan.run_hub.ui
 
 import android.content.Intent
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
 import johan.run_hub.db.constantValues.ConstantValues.START_TRACKING
+import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
 import johan.run_hub.service.LocationTrackingService
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_maps.*
@@ -26,6 +33,9 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     private val args: MapsFragmentArgs by navArgs()
 
+    private var currentlyTracking = false
+    private var pathTrack = mutableListOf<LatLng>()
+
     @set:Inject
     var weight = 0f
 
@@ -36,11 +46,65 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         exerciseType = args.exerciseType
 
         startExercise_btn.setOnClickListener {
-            sendIntentToService(START_TRACKING)
+            sendIntent()
         }
 
         mapView.getMapAsync{
             googleMap = it
+        }
+
+        linkWithObservers()
+    }
+
+    private fun linkWithObservers(){
+        LocationTrackingService.currentlyRunning.observe(viewLifecycleOwner, Observer {
+            checkTrackingState(it)
+        })
+
+        LocationTrackingService.pathTrack.observe(viewLifecycleOwner, Observer {
+            pathTrack = it
+            connectLastTwoPoints()
+            zoomCameraToLastLocation()
+        })
+    }
+
+    private fun checkTrackingState(currentlyTracking: Boolean) {
+        this.currentlyTracking = currentlyTracking
+        if (currentlyTracking) {
+            startExercise_btn.visibility = View.GONE
+
+        } else {
+            startExercise_btn.text = "Start"
+        }
+    }
+
+    private fun sendIntent() {
+        if (!currentlyTracking) {
+            sendIntentToService(START_TRACKING)
+        } else {
+            sendIntentToService(STOP_TRACKING)
+        }
+    }
+
+    private fun connectLastTwoPoints() {
+        if (pathTrack.size >=2) {
+            var lastPoint = pathTrack.last()
+            var prelastPoint = pathTrack[pathTrack.lastIndex - 1]
+
+            val polylineOptions = PolylineOptions()
+                .add(prelastPoint)
+                .add(lastPoint)
+                .color(Color.MAGENTA)
+
+            googleMap?.addPolyline(polylineOptions)
+        }
+    }
+
+    private fun zoomCameraToLastLocation(){
+        if (pathTrack.size >= 1) {
+            var lastPoint = pathTrack.last()
+            val updateFactory = CameraUpdateFactory.newLatLngZoom(lastPoint, 16f)
+            googleMap?.animateCamera(updateFactory)
         }
     }
 
