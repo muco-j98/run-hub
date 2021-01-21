@@ -28,6 +28,10 @@ import johan.run_hub.db.constantValues.ConstantValues.CHANNEL_ID
 import johan.run_hub.db.constantValues.ConstantValues.START_TRACKING
 import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
 import johan.run_hub.utils.TrackUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 typealias Polyline = MutableList<LatLng>
@@ -40,11 +44,13 @@ class LocationTrackingService: LifecycleService() {
     companion object {
         val currentlyRunning = MutableLiveData<Boolean>()
         val pathTrack = MutableLiveData<Polyline>()
+        val elapsedTime = MutableLiveData<Long>()
     }
 
     private fun setupFirstValues() {
         currentlyRunning.postValue(false)
         pathTrack.postValue(mutableListOf())
+        elapsedTime.postValue(0L)
     }
 
     override fun onCreate() {
@@ -68,6 +74,21 @@ class LocationTrackingService: LifecycleService() {
         }
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private var totalTime = 0L
+    private var startedExerciseTime = 0L
+
+    private fun getTime() {
+        startedExerciseTime = System.currentTimeMillis()
+        CoroutineScope(Dispatchers.Main).launch {
+            while (currentlyRunning.value!!) {
+                totalTime = System.currentTimeMillis() - startedExerciseTime
+                elapsedTime.postValue(totalTime)
+                delay(50L)
+            }
+
+        }
     }
 
     private fun getFormattedExerciseString(exerciseType: String): String {
@@ -137,6 +158,7 @@ class LocationTrackingService: LifecycleService() {
 
     private fun startForegroundService() {
         currentlyRunning.postValue(true)
+        getTime()
 
         val channelId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannel("my_service_id", "channel_name")

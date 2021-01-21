@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class Exercise (
     var distanceCovered: Int = 0,
     var elapsedTimeInMillis: Long = 0L,
-    var exerciseDate: Int = 0,
+    var exerciseDate: Long = 0L,
     var averageSpeed: Float = 0f,
     var caloriesBurned: Int = 0,
     var exerciseType: String = ""
