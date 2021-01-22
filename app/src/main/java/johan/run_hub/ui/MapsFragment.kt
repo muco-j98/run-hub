@@ -16,8 +16,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
-import johan.run_hub.db.constantValues.ConstantValues.START_TRACKING
-import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
+import johan.run_hub.constantValues.ConstantValues.START_TRACKING
+import johan.run_hub.constantValues.ConstantValues.STOP_TRACKING
 import johan.run_hub.db.entities.Exercise
 import johan.run_hub.service.LocationTrackingService
 import johan.run_hub.service.Polyline

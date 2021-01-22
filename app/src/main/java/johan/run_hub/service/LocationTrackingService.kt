@@ -24,9 +24,9 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import johan.run_hub.MainActivity
 import johan.run_hub.R
-import johan.run_hub.db.constantValues.ConstantValues.CHANNEL_ID
-import johan.run_hub.db.constantValues.ConstantValues.START_TRACKING
-import johan.run_hub.db.constantValues.ConstantValues.STOP_TRACKING
+import johan.run_hub.constantValues.ConstantValues.CHANNEL_ID
+import johan.run_hub.constantValues.ConstantValues.START_TRACKING
+import johan.run_hub.constantValues.ConstantValues.STOP_TRACKING
 import johan.run_hub.utils.TrackUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

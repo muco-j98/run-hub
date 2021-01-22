@@ -11,6 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
 import johan.run_hub.dependency.AppModule
 import kotlinx.android.synthetic.main.fragment_initial.*
+import timber.log.Timber
 import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
 import javax.inject.Inject
@@ -59,7 +60,7 @@ class InitialFragment : Fragment(R.layout.fragment_initial) {
         try {
             weightVal = parseDouble(weight)
         } catch (e: NumberFormatException) {
-            Log.e("weightError", e.toString())
+            Timber.e(e.toString())
         }
 
         val nameRegex = """^[A-z]+$""".toRegex()

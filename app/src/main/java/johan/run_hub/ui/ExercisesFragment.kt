@@ -9,9 +9,9 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import johan.run_hub.R
-import johan.run_hub.db.constantValues.ConstantValues.BIKE_EXERCISE
-import johan.run_hub.db.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
-import johan.run_hub.db.constantValues.ConstantValues.RUN_EXERCISE
+import johan.run_hub.constantValues.ConstantValues.BIKE_EXERCISE
+import johan.run_hub.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
+import johan.run_hub.constantValues.ConstantValues.RUN_EXERCISE
 import johan.run_hub.utils.TrackUtil
 import kotlinx.android.synthetic.main.fragment_exercises.*
 import pub.devrel.easypermissions.AppSettingsDialog
