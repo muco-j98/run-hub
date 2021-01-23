@@ -71,7 +71,7 @@
             android:id="@+id/avg_speed_text_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avg. Speed:"
+            android:text="Speed:"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/date_text_1"
@@ -98,6 +98,7 @@
             app:layout_constraintTop_toTopOf="@id/avg_speed_text_1" />
 
         <TextView
+            android:id="@+id/calBurned_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"

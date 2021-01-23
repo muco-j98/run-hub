@@ -7,16 +7,24 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
+import johan.run_hub.adapters.ExercisesAdapter
 import johan.run_hub.constantValues.ConstantValues.BIKE_EXERCISE
 import johan.run_hub.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
 import johan.run_hub.constantValues.ConstantValues.RUN_EXERCISE
 import johan.run_hub.utils.TrackUtil
+import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_exercises.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
+@AndroidEntryPoint
 class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions.PermissionCallbacks  {
 
     private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(activity, R.anim.rotate_open_anim) }
@@ -26,10 +34,14 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
 
     private var clicked = false
 
+    private val viewModel: MainViewModel by viewModels()
+    private lateinit var exercisesAdapter: ExercisesAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         requestLocationPermission()
+        formatRecyclerView()
 
         add_btn.setOnClickListener {
             onAddButtonClicked()
@@ -47,6 +59,16 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
                 RUN_EXERCISE)
             findNavController().navigate(action)
         }
+
+        viewModel.getAllExercises().observe(viewLifecycleOwner, Observer {
+            exercisesAdapter.submitList(it)
+        })
+    }
+
+    private fun formatRecyclerView() {
+        exercisesAdapter = ExercisesAdapter()
+        rvExercises.adapter = exercisesAdapter
+        rvExercises.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun getSubQPermission() = EasyPermissions.requestPermissions(

@@ -14,4 +14,6 @@ class MainViewModel @ViewModelInject constructor(
     fun insertExercise(exercise: Exercise) = viewModelScope.launch {
         mainRepository.insertExercise(exercise)
     }
+
+    fun getAllExercises() = mainRepository.getAllExercisesByDate()
 }
