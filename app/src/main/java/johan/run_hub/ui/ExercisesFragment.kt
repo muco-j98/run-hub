@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
 import johan.run_hub.adapters.ExercisesAdapter
+import johan.run_hub.constantValues.CategoryType
 import johan.run_hub.constantValues.ConstantValues.BIKE_EXERCISE
 import johan.run_hub.constantValues.ConstantValues.LOCATION_PERMISSIONS_CODE
 import johan.run_hub.constantValues.ConstantValues.RUN_EXERCISE
+import johan.run_hub.constantValues.SortType
 import johan.run_hub.utils.TrackUtil
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_exercises.*
@@ -43,6 +45,48 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
         requestLocationPermission()
         formatRecyclerView()
 
+        categorySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                when(position) {
+                    0 -> viewModel.sortExercises(CategoryType.ALL, viewModel.sortType)
+                    1 -> viewModel.sortExercises(CategoryType.BIKING, viewModel.sortType)
+                    2 -> viewModel.sortExercises(CategoryType.RUNS, viewModel.sortType)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        sortingSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+               when (position) {
+                   0 -> viewModel.sortExercises(viewModel.categoryType, SortType.DATE)
+                   1 -> viewModel.sortExercises(viewModel.categoryType, SortType.AVG_SPEED)
+                   2 -> viewModel.sortExercises(viewModel.categoryType, SortType.CALORIES)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        viewModel.exercises.observe(viewLifecycleOwner, Observer {
+            exercisesAdapter.submitList(it)
+        })
+
         add_btn.setOnClickListener {
             onAddButtonClicked()
         }
@@ -51,7 +95,6 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
             val action = ExercisesFragmentDirections.actionExercisesFragmentToMapsFragment(
                 BIKE_EXERCISE)
             findNavController().navigate(action)
-
         }
 
         run_btn.setOnClickListener {
@@ -59,10 +102,6 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
                 RUN_EXERCISE)
             findNavController().navigate(action)
         }
-
-        viewModel.getAllExercises().observe(viewLifecycleOwner, Observer {
-            exercisesAdapter.submitList(it)
-        })
     }
 
     private fun formatRecyclerView() {

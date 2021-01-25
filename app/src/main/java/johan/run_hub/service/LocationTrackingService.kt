@@ -141,7 +141,6 @@ class LocationTrackingService: LifecycleService() {
                 result?.locations?.let { locations ->
                     for(location in locations) {
                         addRoutePositions(location)
-                        Timber.d("NEW LOCATION: ${location.latitude}, ${location.longitude}")
                     }
                 }
             }

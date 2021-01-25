@@ -5,7 +5,6 @@ object ConstantValues {
     const val LOCATION_PERMISSIONS_CODE = 1
     const val CHANNEL_ID = "CHANNEL_ID"
 
-    const val EXERCISE_TYPE = "EXERCISE_TYPE"
     const val RUN_EXERCISE = "RUN_EXERCISE"
     const val BIKE_EXERCISE = "BIKE_EXERCISE"
 

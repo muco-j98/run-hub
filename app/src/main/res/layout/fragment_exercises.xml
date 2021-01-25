@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="Sort:"
-        android:textColor="@color/black"
+        android:text="Type:"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@id/categorySpinner"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +36,7 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="Filter:"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/sortingSpinner"
         app:layout_constraintTop_toTopOf="parent" />
