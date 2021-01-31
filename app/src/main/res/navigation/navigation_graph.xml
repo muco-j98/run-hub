@@ -42,7 +42,7 @@
         tools:layout="@layout/fragment_regression_algorithm" />
     <fragment
         android:id="@+id/statsFragment"
-        android:name="johan.run_hub.ui.StatsFragment"
+        android:name="johan.run_hub.ui.RecipesFragment"
         android:label="fragment_stats"
-        tools:layout="@layout/fragment_stats" />
+        tools:layout="@layout/fragment_recipes" />
 </navigation>

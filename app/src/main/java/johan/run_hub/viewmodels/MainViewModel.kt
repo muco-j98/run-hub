@@ -2,11 +2,14 @@ package johan.run_hub.viewmodels
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import johan.run_hub.constantValues.CategoryType
 import johan.run_hub.constantValues.SortType
 import johan.run_hub.db.entities.Exercise
+import johan.run_hub.network.models.FoodResponse
+import johan.run_hub.network.util.Resource
 import johan.run_hub.repositories.MainRepository
 import kotlinx.coroutines.launch
 
@@ -16,6 +19,27 @@ class MainViewModel @ViewModelInject constructor(
 
     fun insertExercise(exercise: Exercise) = viewModelScope.launch {
         mainRepository.insertExercise(exercise)
+    }
+
+    val recipes: MutableLiveData<Resource<FoodResponse>> = MutableLiveData()
+    var from = 0
+    var to = 6
+
+    init {
+        getRecipes("chicken")
+    }
+
+    fun getRecipes(ingredient: String) = viewModelScope.launch {
+        recipes.postValue(Resource.Loading())
+        mainRepository.searchRecipes(ingredient, from, to).let { response1 ->
+            if (response1.isSuccessful) {
+                response1.body()?.let {
+                    recipes.postValue(Resource.Success(it))
+                }
+            } else {
+                    recipes.postValue(Resource.Error(response1.message()))
+            }
+        }
     }
 
     private val getAllExercisesByDate = mainRepository.getAllExercisesByDate()

@@ -22,7 +22,7 @@ class ExercisesAdapter: ListAdapter<Exercise, ExercisesAdapter.ViewHolder>(Exerc
         private val distance: TextView = itemView.findViewById(R.id.distance_text)
         private val avgSpeed: TextView = itemView.findViewById(R.id.avg_speed_text)
         private val caloriesBurned: TextView = itemView.findViewById(R.id.calBurned_text)
-        private val exerciseIcon: ImageView = itemView.findViewById(R.id.imV_exerciseIcon)
+        private val exerciseIcon: ImageView = itemView.findViewById(R.id.imV_ExerciseIc)
 
         fun set(exercise: Exercise) {
             val format = SimpleDateFormat("dd.MM.yy", Locale.getDefault())

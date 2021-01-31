@@ -9,7 +9,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import johan.run_hub.R
+import johan.run_hub.constantValues.FoodApiKeys
 import johan.run_hub.db.ExerciseDatabase
+import johan.run_hub.network.api.ApiHelper
+import johan.run_hub.network.api.ApiHelperImpl
+import johan.run_hub.network.api.FoodApi
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -45,4 +53,34 @@ object AppModule {
     @Provides
     fun provideWeight(sharedPref: SharedPreferences) =
         sharedPref.getFloat("WEIGHT", 0f)
+
+    @Provides
+    fun provideBaseUrl() = FoodApiKeys.BASE_URL
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient() = run {
+        val loggingInterceptor = HttpLoggingInterceptor()
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL:String) =
+        Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .build()
+
+    @Singleton
+    @Provides
+    fun provideFoodApi(retrofit: Retrofit) = retrofit.create(FoodApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideApiHelper(apiHelper: ApiHelperImpl): ApiHelper = apiHelper
 }

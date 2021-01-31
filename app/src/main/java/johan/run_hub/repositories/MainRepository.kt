@@ -2,10 +2,12 @@ package johan.run_hub.repositories
 
 import johan.run_hub.db.ExerciseDao
 import johan.run_hub.db.entities.Exercise
+import johan.run_hub.network.api.ApiHelper
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
-    val exerciseDao: ExerciseDao
+    val exerciseDao: ExerciseDao,
+    private val apiHelper: ApiHelper
 ){
     suspend fun insertExercise(exercise: Exercise) = exerciseDao.insertExercise(exercise)
 
@@ -26,4 +28,8 @@ class MainRepository @Inject constructor(
     fun getAllRunsBySpeed() = exerciseDao.getAllRunsBySpeed()
 
     fun getAllRunsByCalories() = exerciseDao.getAllRunsByCalories()
+
+    suspend fun searchRecipes(ingredient: String,
+                              from: Int,
+                              to: Int) = apiHelper.searchRecipes(ingredient, from, to)
 }
