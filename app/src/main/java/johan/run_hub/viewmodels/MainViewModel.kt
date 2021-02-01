@@ -23,11 +23,7 @@ class MainViewModel @ViewModelInject constructor(
 
     val recipes: MutableLiveData<Resource<FoodResponse>> = MutableLiveData()
     var from = 0
-    var to = 6
-
-    init {
-        getRecipes("chicken")
-    }
+    var to = 10
 
     fun getRecipes(ingredient: String) = viewModelScope.launch {
         recipes.postValue(Resource.Loading())

@@ -9,7 +9,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/recipeField"
+        android:id="@+id/recipeTextField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Recipe"
@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/recipeField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -32,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipeField"
+        app:layout_constraintTop_toBottomOf="@+id/recipeTextField"
         tools:listitem="@layout/recipe_item_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
