@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import johan.run_hub.network.util.Resource
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_recipes.*
 import timber.log.Timber
+import java.time.Duration
 
 @AndroidEntryPoint
 class RecipesFragment : Fragment(R.layout.fragment_recipes) {
@@ -43,12 +45,17 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                timer = Timer()
-                timer.schedule(object : TimerTask() {
-                    override fun run() {
-                        viewModel.getRecipes(s.toString())
+                s.let {
+                    val inputTxt = s.toString().trim()
+                    if (inputTxt.isNotEmpty()) {
+                        timer = Timer()
+                        timer.schedule(object : TimerTask() {
+                            override fun run() {
+                                viewModel.getRecipes(s.toString())
+                            }
+                        }, stopTime)
                     }
-                }, stopTime)
+                }
             }
 
         })
@@ -59,7 +66,12 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                     recipeResponse.data.let { response ->
                         response?.hits.let { hits ->
                             hits?.let {
-                                recipesAdapter.submitList(it)
+                                if (it.isEmpty()) {
+                                    Toast.makeText(requireContext(),
+                                        "No recipes found.",
+                                        Toast.LENGTH_SHORT).show()
+                                } else
+                                    recipesAdapter.submitList(it)
                             }
                         }
                     }

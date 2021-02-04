@@ -14,6 +14,7 @@ import johan.run_hub.R
 import johan.run_hub.network.models.Hit
 import johan.run_hub.network.models.Recipe
 import kotlinx.android.synthetic.main.recipe_item_layout.view.*
+import kotlin.math.roundToInt
 
 class RecipesAdapter: ListAdapter<Hit, RecipesAdapter.RecipeViewHolder>(RecipeDiffCallBack()) {
 
@@ -28,7 +29,7 @@ class RecipesAdapter: ListAdapter<Hit, RecipesAdapter.RecipeViewHolder>(RecipeDi
 
             Glide.with(holder.itemView).load(hit.recipe.image).into(recipeImage)
 
-            val caloriesText = "${hit.recipe.calories}kcal"
+            val caloriesText = "${hit.recipe.calories.roundToInt()} kcal"
             calories.text = caloriesText
         }
 

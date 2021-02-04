@@ -8,7 +8,7 @@
     <item
         android:id="@+id/statsFragment"
         android:enabled="true"
-        android:icon="@drawable/ic_statistics"
+        android:icon="@drawable/recipe_book"
         android:title="Stats"/>
     <item
         android:id="@+id/regressionAlgorithmFragment"
