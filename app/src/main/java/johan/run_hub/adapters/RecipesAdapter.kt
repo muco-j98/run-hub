@@ -16,7 +16,9 @@ import johan.run_hub.network.models.Recipe
 import kotlinx.android.synthetic.main.recipe_item_layout.view.*
 import kotlin.math.roundToInt
 
-class RecipesAdapter: ListAdapter<Hit, RecipesAdapter.RecipeViewHolder>(RecipeDiffCallBack()) {
+class RecipesAdapter (
+    private val listener: (Hit) -> Unit
+        ): ListAdapter<Hit, RecipesAdapter.RecipeViewHolder>(RecipeDiffCallBack()) {
 
     class RecipeViewHolder private constructor(itemView: View): RecyclerView.ViewHolder(itemView) {
         private val recipeImage: ImageView = itemView.findViewById(R.id.imV_recipeIcon)
@@ -48,8 +50,9 @@ class RecipesAdapter: ListAdapter<Hit, RecipesAdapter.RecipeViewHolder>(RecipeDi
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
-        val recip = getItem(position)
-        holder.set(recip, holder)
+        val hit = getItem(position)
+        holder.set(hit, holder)
+        holder.itemView.setOnClickListener { listener(hit) }
     }
 }
 

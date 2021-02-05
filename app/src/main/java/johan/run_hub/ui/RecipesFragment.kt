@@ -1,5 +1,6 @@
 package johan.run_hub.ui
 
+import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import java.util.*
@@ -13,9 +14,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
 import johan.run_hub.adapters.RecipesAdapter
+import johan.run_hub.network.models.Hit
 import johan.run_hub.network.util.Resource
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_recipes.*
@@ -67,6 +72,7 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                         response?.hits.let { hits ->
                             hits?.let {
                                 if (it.isEmpty()) {
+                                    setupRecycler()
                                     Toast.makeText(requireContext(),
                                         "No recipes found.",
                                         Toast.LENGTH_SHORT).show()
@@ -89,8 +95,26 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     }
 
     private fun setupRecycler() {
-        recipesAdapter = RecipesAdapter()
+        recipesAdapter = RecipesAdapter() {
+            manageOnClickEvent(it)
+        }
         rvRecipes.adapter = recipesAdapter
         rvRecipes.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    private fun manageOnClickEvent(hit: Hit) {
+        val recipeImage = Glide.with(this)
+            .asDrawable()
+            .load(hit.recipe.image)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Are you sure you want to add this recipe?")
+            .setNegativeButton("No", null)
+            .setPositiveButton("Yes") { dialog, _ ->
+                Toast.makeText(requireContext(), "Yes received", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+            .show()
+
     }
 }
