@@ -3,6 +3,7 @@ package johan.run_hub.db
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import johan.run_hub.db.entities.Exercise
+import johan.run_hub.network.models.Recipe
 
 @Dao
 interface ExerciseDao {
@@ -12,6 +13,9 @@ interface ExerciseDao {
 
     @Delete
     suspend fun deleteExercise(exercise: Exercise)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecipe(recipe: Recipe)
 
     @Query("SELECT * FROM exercise_table ORDER BY exerciseDate DESC")
     fun getAllExercisesByDate(): LiveData<List<Exercise>>

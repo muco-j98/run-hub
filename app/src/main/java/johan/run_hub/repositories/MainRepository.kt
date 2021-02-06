@@ -3,6 +3,7 @@ package johan.run_hub.repositories
 import johan.run_hub.db.ExerciseDao
 import johan.run_hub.db.entities.Exercise
 import johan.run_hub.network.api.ApiHelper
+import johan.run_hub.network.models.Recipe
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -32,4 +33,6 @@ class MainRepository @Inject constructor(
     suspend fun searchRecipes(ingredient: String,
                               from: Int,
                               to: Int) = apiHelper.searchRecipes(ingredient, from, to)
+
+    suspend fun insertRecipe(recipe: Recipe) = exerciseDao.insertRecipe(recipe)
 }

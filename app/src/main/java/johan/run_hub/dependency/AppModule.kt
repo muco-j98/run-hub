@@ -32,7 +32,8 @@ object AppModule {
         context,
         ExerciseDatabase::class.java,
         "exercise_db"
-    ).build()
+    ).fallbackToDestructiveMigration()
+        .build()
 
     @Provides
     @Singleton

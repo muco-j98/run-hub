@@ -10,6 +10,7 @@ data class Recipe(
     val label: String,
     val uri: String,
     val url: String,
+    var recipeDate: Long? = 0L,
 ) {
     @PrimaryKey(autoGenerate = true)
     var recipeId: Int? = null

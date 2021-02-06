@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import johan.run_hub.R
 import johan.run_hub.adapters.RecipesAdapter
 import johan.run_hub.network.models.Hit
+import johan.run_hub.network.models.Recipe
 import johan.run_hub.network.util.Resource
 import johan.run_hub.viewmodels.MainViewModel
 import kotlinx.android.synthetic.main.fragment_recipes.*
@@ -103,18 +104,23 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
     }
 
     private fun manageOnClickEvent(hit: Hit) {
-        val recipeImage = Glide.with(this)
-            .asDrawable()
-            .load(hit.recipe.image)
-
         MaterialAlertDialogBuilder(requireContext())
             .setMessage("Are you sure you want to add this recipe?")
             .setNegativeButton("No", null)
             .setPositiveButton("Yes") { dialog, _ ->
-                Toast.makeText(requireContext(), "Yes received", Toast.LENGTH_SHORT).show()
+                saveRecipeToDatabase(hit.recipe)
                 dialog.dismiss()
             }
             .show()
+    }
 
+    private fun saveRecipeToDatabase(recipe: Recipe) {
+        val exerciseDate = Date().time
+        recipe.recipeDate = exerciseDate
+
+        viewModel.insertRecipe(recipe)
+        Toast.makeText(requireContext(), "${recipe.label} saved to database",
+            Toast.LENGTH_SHORT)
+            .show()
     }
 }

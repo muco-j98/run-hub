@@ -7,7 +7,7 @@ import johan.run_hub.network.models.Recipe
 
 @Database(
     entities = [Exercise::class, Recipe::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class ExerciseDatabase :RoomDatabase() {

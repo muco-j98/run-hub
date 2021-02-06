@@ -9,6 +9,7 @@ import johan.run_hub.constantValues.CategoryType
 import johan.run_hub.constantValues.SortType
 import johan.run_hub.db.entities.Exercise
 import johan.run_hub.network.models.FoodResponse
+import johan.run_hub.network.models.Recipe
 import johan.run_hub.network.util.Resource
 import johan.run_hub.repositories.MainRepository
 import kotlinx.coroutines.launch
@@ -19,6 +20,10 @@ class MainViewModel @ViewModelInject constructor(
 
     fun insertExercise(exercise: Exercise) = viewModelScope.launch {
         mainRepository.insertExercise(exercise)
+    }
+
+    fun insertRecipe(recipe: Recipe) = viewModelScope.launch {
+        mainRepository.insertRecipe(recipe)
     }
 
     val recipes: MutableLiveData<Resource<FoodResponse>> = MutableLiveData()
