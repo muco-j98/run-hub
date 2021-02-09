@@ -35,4 +35,6 @@ class MainRepository @Inject constructor(
                               to: Int) = apiHelper.searchRecipes(ingredient, from, to)
 
     suspend fun insertRecipe(recipe: Recipe) = exerciseDao.insertRecipe(recipe)
+
+    fun getJoinedCalories() = exerciseDao.getJoinedCalories()
 }

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import johan.run_hub.db.entities.Exercise
 import johan.run_hub.network.models.Recipe
+import johan.run_hub.utils.JoinedCalories
 
 @Dao
 interface ExerciseDao {
@@ -16,6 +17,9 @@ interface ExerciseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecipe(recipe: Recipe)
+
+    @Query("SELECT SUM(DISTINCT calories), SUM(DISTINCT caloriesBurned) FROM recipe_table INNER JOIN exercise_table ON strftime('%m-%d-%Y', calories  / 1000, 'unixepoch') = strftime('%m-%d-%Y', caloriesBurned / 1000, 'unixepoch')")
+    fun getJoinedCalories(): LiveData<List<JoinedCalories>>
 
     @Query("SELECT * FROM exercise_table ORDER BY exerciseDate DESC")
     fun getAllExercisesByDate(): LiveData<List<Exercise>>
@@ -44,4 +48,6 @@ interface ExerciseDao {
     @Query("SELECT * FROM exercise_table WHERE exerciseType = 'RUN_EXERCISE' ORDER BY caloriesBurned DESC")
     fun getAllRunsByCalories(): LiveData<List<Exercise>>
 
+//    @Query("SELECT calories FROM recipe_table WHERE strftime('%m-%d-%Y', recipeDate, 'unixepoch') = :day")
+//    fun getDailyConsumedCalories(day: String): Double
 }

@@ -125,16 +125,20 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     private fun setTimeText(milliseconds: Long): String {
         var ms = milliseconds
-        val hours = TimeUnit.MILLISECONDS.toHours(ms)
-        ms -= TimeUnit.HOURS.toMillis((hours))
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(ms)
-        ms -= TimeUnit.MINUTES.toMillis(minutes)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(ms)
-        ms -= TimeUnit.SECONDS.toMillis(seconds)
+        val h = TimeUnit.MILLISECONDS.toHours(ms)
+        ms -= TimeUnit.HOURS.toMillis((h))
+        val m = TimeUnit.MILLISECONDS.toMinutes(ms)
+        ms -= TimeUnit.MINUTES.toMillis(m)
+        val s = TimeUnit.MILLISECONDS.toSeconds(ms)
+        ms -= TimeUnit.SECONDS.toMillis(s)
         ms /= 10
-        return "${if(hours < 10) "0" else ""}$hours:" +
-                "${if(minutes < 10) "0" else ""}$minutes:" +
-                "${if(seconds < 10) "0" else ""}$seconds:" +
+        return provideFormattedTime(h, m, s, ms)
+    }
+
+    private fun provideFormattedTime(h: Long, m: Long, s: Long, ms: Long): String {
+        return "${if(h < 10) "0" else ""}$h:" +
+                "${if(m < 10) "0" else ""}$m:" +
+                "${if(s < 10) "0" else ""}$s:" +
                 "${if(ms < 10) "0" else ""}$ms:"
     }
 

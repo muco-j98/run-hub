@@ -45,11 +45,6 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
         recipeField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int){}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                timer.cancel()
-                timer.purge()
-            }
-
             override fun afterTextChanged(s: Editable?) {
                 s.let {
                     val inputTxt = s.toString().trim()
@@ -62,6 +57,11 @@ class RecipesFragment : Fragment(R.layout.fragment_recipes) {
                         }, stopTime)
                     }
                 }
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                timer.cancel()
+                timer.purge()
             }
 
         })
