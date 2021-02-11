@@ -39,7 +39,34 @@ class RegressionModel(var joinedCalories: List<JoinedCalories>) {
 
     private val slope = getSlope()
 
-    private val yIntercept = yMean - slope * xMean
+    private val yIntercept = yMean - (slope * xMean)
 
-    //merr x dhe y dhe calc square error
+    val smallestRegressionXValue = (yCoordinates.minOrNull()!!.minus(yIntercept)).div(slope)
+    val smallestRegressionYValue = slope.times(xCoordinates.minOrNull()!!).plus(yIntercept)
+    val largestRegressionXValue = (yCoordinates.maxOrNull()!!.minus(yIntercept)).div(slope)
+    val largestRegressionYValue = slope.times(xCoordinates.maxOrNull()!!).plus(yIntercept)
+
+    //calculate sum of square errors
+    fun getFitOfTheModel(): Double {
+        //sum of squares error
+        var sse = 0.0
+        //sum of squares residuals
+        var ssr = 0.0
+        //sum of squares total
+        var sst = 0.0
+        var mean = yCoordinates.average()
+        var predictedValue = 0.0
+
+        for (i in 0..xCoordinates.size) {
+            ssr += (yCoordinates[i] - mean).pow(2)
+            predictedValue = getPredictedValue(xCoordinates[i])
+            sse += (yCoordinates[i] - predictedValue).pow(2)
+        }
+
+        //fit of the model | the higher the better
+        return ssr/sst
+    }
+
+    private fun getPredictedValue(xValue: Double) = yIntercept + slope * xValue
+
 }
