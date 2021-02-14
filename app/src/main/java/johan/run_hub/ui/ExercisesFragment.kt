@@ -60,7 +60,6 @@ class ExercisesFragment : Fragment(R.layout.fragment_exercises), EasyPermissions
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
             }
         }
 

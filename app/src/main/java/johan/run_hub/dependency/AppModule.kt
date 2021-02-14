@@ -3,37 +3,64 @@ package johan.run_hub.dependency
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.components.SingletonComponent
 import johan.run_hub.R
 import johan.run_hub.constantValues.FoodApiKeys
 import johan.run_hub.db.ExerciseDatabase
+import johan.run_hub.db.entities.Exercise
 import johan.run_hub.network.api.ApiHelper
 import johan.run_hub.network.api.ApiHelperImpl
 import johan.run_hub.network.api.FoodApi
+import johan.run_hub.utils.PrePopulateUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.Executors
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object AppModule {
+
+    lateinit var exDb : ExerciseDatabase
+
+    private val exec = Executors.newSingleThreadExecutor()
 
     @Provides
     @Singleton
     fun provideExerciseDatabase(
         @ApplicationContext context : Context
-    ) = Room.databaseBuilder(
-        context,
-        ExerciseDatabase::class.java,
-        "exercise_db"
-    ).fallbackToDestructiveMigration()
-        .build()
+    ): ExerciseDatabase {
+        exDb = Room.databaseBuilder(
+            context,
+            ExerciseDatabase::class.java,
+            "exercise_db"
+        ).fallbackToDestructiveMigration()
+            .addCallback(object :RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+                    val dao = exDb.getExerciseDao()
+
+                    exec.execute {
+                        dao.insertAllExercises(PrePopulateUtil.getExercises())
+                        dao.insertAllRecipes(PrePopulateUtil.getRecipes())
+                    }
+                }
+            })
+            .build()
+
+        return exDb
+    }
 
     @Provides
     @Singleton

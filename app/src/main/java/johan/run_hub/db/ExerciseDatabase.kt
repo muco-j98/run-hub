@@ -8,7 +8,7 @@ import johan.run_hub.utils.JoinedCalories
 
 @Database(
     entities = [Exercise::class, Recipe::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class ExerciseDatabase :RoomDatabase() {

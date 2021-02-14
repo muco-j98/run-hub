@@ -1,10 +1,7 @@
 package johan.run_hub.viewmodels
 
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import johan.run_hub.constantValues.CategoryType
 import johan.run_hub.constantValues.SortType
 import johan.run_hub.db.entities.Exercise
@@ -13,9 +10,11 @@ import johan.run_hub.network.models.Recipe
 import johan.run_hub.network.util.Resource
 import johan.run_hub.repositories.MainRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel @ViewModelInject constructor(
-    val mainRepository: MainRepository
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val mainRepository: MainRepository,
 ): ViewModel() {
 
     fun insertExercise(exercise: Exercise) = viewModelScope.launch {

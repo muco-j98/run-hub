@@ -92,7 +92,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         var averageSpeed = (distance / 1000f) / getTimeInHours(curTime)
         val roundedAverageSpeed = round(averageSpeed * 10) / 10f
         val exerciseDate = Date().time
-        val caloriesBurned = ((distance / 1000f) * weight).toInt()
+        val caloriesBurned = ((distance / 1000f) * weight).toDouble()
         val exercise = Exercise(distance, curTime, exerciseDate,
             roundedAverageSpeed, caloriesBurned, exerciseType)
         mainViewModel.insertExercise(exercise)
