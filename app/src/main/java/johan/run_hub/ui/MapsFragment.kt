@@ -89,7 +89,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     private fun saveExercise() {
         val distance = calculateDistance(pathTrack).toInt()
-        var averageSpeed = (distance / 1000f) / getTimeInHours(curTime)
+        val averageSpeed = (distance / 1000f) / getTimeInHours(curTime)
         val roundedAverageSpeed = round(averageSpeed * 10) / 10f
         val exerciseDate = Date().time
         val caloriesBurned = ((distance / 1000f) * weight).toDouble()
@@ -139,7 +139,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         return "${if(h < 10) "0" else ""}$h:" +
                 "${if(m < 10) "0" else ""}$m:" +
                 "${if(s < 10) "0" else ""}$s:" +
-                "${if(ms < 10) "0" else ""}$ms:"
+                "${if(ms < 10) "0" else ""}$ms"
     }
 
     private fun checkTrackingState(currentlyTracking: Boolean) {

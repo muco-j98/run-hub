@@ -33,7 +33,6 @@ import javax.inject.Singleton
 object AppModule {
 
     lateinit var exDb : ExerciseDatabase
-
     private val exec = Executors.newSingleThreadExecutor()
 
     @Provides
@@ -51,6 +50,7 @@ object AppModule {
                     super.onCreate(db)
                     val dao = exDb.getExerciseDao()
 
+                    //pre populate database
                     exec.execute {
                         dao.insertAllExercises(PrePopulateUtil.getExercises())
                         dao.insertAllRecipes(PrePopulateUtil.getRecipes())
