@@ -38,21 +38,20 @@ class RegressionAlgorithmFragment : Fragment(R.layout.fragment_regression_algori
                 val scatterData = ScatterData(scatterDataSet)
 
                 val regressionModel = RegressionModel(it)
+
+                tvModelFit.text = regressionModel.getFitOfTheModel().toString()
+
                 val smallestPoint = it.minByOrNull { x -> x.caloriesConsumed }
                 val largestPoint = it.maxByOrNull { x -> x.caloriesConsumed }
 
                 val smallestYValue = smallestPoint?.caloriesConsumed?.let { it1 ->
-                    regressionModel.getPredictedYValue(
-                        it1.toDouble())
+                    regressionModel.getPredictedYValue(it1)
                 }
                 val largestYValue = largestPoint?.caloriesConsumed?.let { it1 ->
-                    regressionModel.getPredictedYValue(
-                        it1.toDouble())
+                    regressionModel.getPredictedYValue(it1)
                 }
 
                 val linePoints = listOf(
-//                    largestXValue?.let { it1 -> smallestXValue?.let { it2 -> Entry(it2.toFloat(), it1.toFloat()) } },
-//                    largestYValue?.let { it1 -> smallestYValue?.let { it2 -> Entry(it2.toFloat(), it1.toFloat()) } }
                     smallestYValue?.let { it1 -> Entry(smallestPoint.caloriesConsumed.toFloat(), it1.toFloat()) },
                     largestYValue?.let { it1 -> Entry(largestPoint.caloriesConsumed.toFloat(), it1.toFloat()) }
                 )

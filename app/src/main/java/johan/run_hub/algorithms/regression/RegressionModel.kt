@@ -36,14 +36,14 @@ class RegressionModel(var joinedCalories: List<JoinedCalories>) {
         var mean = yCoordinates.average()
         var predictedValue = 0.0
 
-        for (i in 0..xCoordinates.size) {
-            ssr += (yCoordinates[i] - mean).pow(2)
+        for (i in xCoordinates.indices) {
+            sst += (yCoordinates[i] - mean).pow(2)
             predictedValue = getPredictedYValue(xCoordinates[i])
-            sse += (yCoordinates[i] - predictedValue).pow(2)
+            ssr += (yCoordinates[i] - predictedValue).pow(2)
         }
 
         //fit of the model | the higher the better
-        return ssr/sst
+        return 1 - (ssr / sst)
     }
 
     fun getPredictedYValue(xValue: Double) = slope * xValue + yIntercept
