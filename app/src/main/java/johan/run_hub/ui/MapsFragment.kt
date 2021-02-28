@@ -70,7 +70,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     }
 
     private fun linkWithObservers(){
-        LocationTrackingService.currentlyRunning.observe(viewLifecycleOwner, Observer {
+        LocationTrackingService.currentlyExercising.observe(viewLifecycleOwner, Observer {
             checkTrackingState(it)
         })
 

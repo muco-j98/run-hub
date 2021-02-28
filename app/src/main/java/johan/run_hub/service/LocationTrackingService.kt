@@ -10,7 +10,6 @@ import android.content.Intent
 import android.location.Location
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -42,13 +41,13 @@ class LocationTrackingService: LifecycleService() {
     lateinit var exerciseType: String
 
     companion object {
-        val currentlyRunning = MutableLiveData<Boolean>()
+        val currentlyExercising = MutableLiveData<Boolean>()
         val pathTrack = MutableLiveData<Polyline>()
         val elapsedTime = MutableLiveData<Long>()
     }
 
     private fun setupFirstValues() {
-        currentlyRunning.postValue(false)
+        currentlyExercising.postValue(false)
         pathTrack.postValue(mutableListOf())
         elapsedTime.postValue(0L)
     }
@@ -58,7 +57,7 @@ class LocationTrackingService: LifecycleService() {
         setupFirstValues()
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
-        currentlyRunning.observe(this, Observer {
+        currentlyExercising.observe(this, Observer {
             updateLocationTracking(it)
         })
     }
@@ -82,12 +81,11 @@ class LocationTrackingService: LifecycleService() {
     private fun getTime() {
         startedExerciseTime = System.currentTimeMillis()
         CoroutineScope(Dispatchers.Main).launch {
-            while (currentlyRunning.value!!) {
+            while (currentlyExercising.value!!) {
                 totalTime = System.currentTimeMillis() - startedExerciseTime
                 elapsedTime.postValue(totalTime)
                 delay(50L)
             }
-
         }
     }
 
@@ -108,7 +106,7 @@ class LocationTrackingService: LifecycleService() {
     }
 
     private fun stopTracking() {
-        currentlyRunning.postValue(false)
+        currentlyExercising.postValue(false)
     }
 
     @SuppressLint("MissingPermission")
@@ -134,10 +132,10 @@ class LocationTrackingService: LifecycleService() {
         return locationRequest
     }
 
-    val locationCallback = object : LocationCallback() {
+    private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult?) {
             super.onLocationResult(result)
-            if(currentlyRunning.value!!) {
+            if(currentlyExercising.value!!) {
                 result?.locations?.let { locations ->
                     for(location in locations) {
                         addRoutePositions(location)
@@ -156,7 +154,7 @@ class LocationTrackingService: LifecycleService() {
     }
 
     private fun startForegroundService() {
-        currentlyRunning.postValue(true)
+        currentlyExercising.postValue(true)
         getTime()
 
         val channelId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
